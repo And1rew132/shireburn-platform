@@ -14,9 +14,22 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     config.plugins = config.plugins ?? []
+    const hmrHost = process.env.STORYBOOK_HMR_HOST
+    const hmrClientPort = process.env.STORYBOOK_HMR_CLIENT_PORT
+      ? Number(process.env.STORYBOOK_HMR_CLIENT_PORT)
+      : undefined
+
     config.server = {
       ...config.server,
-      allowedHosts: true
+      allowedHosts: true,
+      hmr: hmrHost
+        ? {
+            ...(typeof config.server?.hmr === 'object' ? config.server.hmr : {}),
+            host: hmrHost,
+            protocol: process.env.STORYBOOK_HMR_PROTOCOL ?? 'wss',
+            clientPort: hmrClientPort
+          }
+        : config.server?.hmr
     }
     const nuxtUiPlugins = nuxtUi({
       root: process.cwd(),

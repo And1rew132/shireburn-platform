@@ -12,6 +12,12 @@ COPY . .
 RUN npm run db:generate
 RUN npm run build -- --filter @purple-cross/web
 
+FROM deps AS storybook
+WORKDIR /app
+COPY . .
+EXPOSE 6006
+CMD ["node", "node_modules/storybook/dist/bin/dispatcher.js", "dev", "--config-dir", "apps/web/.storybook", "--host", "0.0.0.0", "--port", "6006"]
+
 FROM node:22.12-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production

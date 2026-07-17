@@ -54,6 +54,39 @@ services:
       - internal
       - traefik
 
+  storybook:
+    profiles:
+      - storybook
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+      target: storybook
+    environment:
+      STORYBOOK_DISABLE_TELEMETRY: "1"
+      STORYBOOK_HMR_HOST: "${STORYBOOK_HMR_HOST:-}"
+      STORYBOOK_HMR_PROTOCOL: "${STORYBOOK_HMR_PROTOCOL:-wss}"
+      STORYBOOK_HMR_CLIENT_PORT: "${STORYBOOK_HMR_CLIENT_PORT:-443}"
+    ports:
+      - "${STORYBOOK_PORT:-6006}:6006"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "${TRAEFIK_NETWORK:-traefik}"
+      traefik.http.routers.shireburn-storybook.rule: "Host(`${STORYBOOK_TRAEFIK_HOST:-shireburn-storybook.localhost}`)"
+      traefik.http.routers.shireburn-storybook.entrypoints: "${TRAEFIK_ENTRYPOINTS:-web}"
+      traefik.http.routers.shireburn-storybook.tls: "${TRAEFIK_TLS:-false}"
+      traefik.http.routers.shireburn-storybook.tls.certresolver: "${TRAEFIK_CERT_RESOLVER:-myresolver}"
+      traefik.http.routers.shireburn-storybook.service: shireburn-storybook
+      traefik.http.services.shireburn-storybook.loadbalancer.server.port: "6006"
+      traefik.http.middlewares.shireburn-storybook-compress.compress: "true"
+      traefik.http.routers.shireburn-storybook.middlewares: shireburn-storybook-compress
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:6006 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - traefik
+
 volumes:
   postgres-data:
 

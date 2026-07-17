@@ -39,6 +39,7 @@ npm run build
 ```
 
 Use `docker compose -f deploy/docker/docker-compose.yml up -d postgres` for local PostgreSQL.
+Use `docker compose -f deploy/docker/docker-compose.yml --profile storybook up -d --build storybook` to run Storybook in Docker.
 
 ## Operational Notes
 
