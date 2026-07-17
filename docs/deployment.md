@@ -2,12 +2,21 @@
 
 ## Docker Compose
 
-`deploy/docker/docker-compose.yml` runs local PostgreSQL and, under the `app` profile, the Nuxt app image.
+`deploy/docker/docker-compose.yml` runs local PostgreSQL and, under the `app` profile, the Nuxt app image. The app is exposed directly on `localhost:3000` and also includes Traefik labels for a local or shared reverse proxy.
 
 ```bash
 docker compose -f deploy/docker/docker-compose.yml up -d postgres
 docker compose -f deploy/docker/docker-compose.yml --profile app up --build
 ```
+
+For Traefik, create or reuse the external proxy network first:
+
+```bash
+docker network create traefik
+TRAEFIK_HOST=purple-cross.localhost docker compose -f deploy/docker/docker-compose.yml --profile app up -d --build
+```
+
+The default labels route `Host(purple-cross.localhost)` through the `web` entrypoint to the Nuxt container on port `3000`. Override `TRAEFIK_HOST`, `TRAEFIK_ENTRYPOINTS`, and `TRAEFIK_NETWORK` from `.env` or the shell.
 
 ## Production Image
 

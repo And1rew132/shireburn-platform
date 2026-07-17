@@ -16,6 +16,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    networks:
+      - internal
 
   web:
     profiles:
@@ -29,6 +31,15 @@ services:
       NUXT_PUBLIC_APP_NAME: Purple Cross Employee Management
     ports:
       - "3000:3000"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "${TRAEFIK_NETWORK:-traefik}"
+      traefik.http.routers.purple-cross.rule: "Host(`${TRAEFIK_HOST:-purple-cross.localhost}`)"
+      traefik.http.routers.purple-cross.entrypoints: "${TRAEFIK_ENTRYPOINTS:-web}"
+      traefik.http.routers.purple-cross.service: purple-cross
+      traefik.http.services.purple-cross.loadbalancer.server.port: "3000"
+      traefik.http.middlewares.purple-cross-compress.compress: "true"
+      traefik.http.routers.purple-cross.middlewares: purple-cross-compress
     depends_on:
       postgres:
         condition: service_healthy
@@ -37,6 +48,15 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+    networks:
+      - internal
+      - traefik
 
 volumes:
   postgres-data:
+
+networks:
+  internal:
+  traefik:
+    name: "${TRAEFIK_NETWORK:-traefik}"
+    external: true
