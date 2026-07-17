@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { EmployeeStatus } from '@purple-cross/shared'
+import { computed } from 'vue'
 
 const props = defineProps<{ status: EmployeeStatus }>()
 
