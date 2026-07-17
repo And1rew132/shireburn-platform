@@ -10,6 +10,7 @@ const {
   pending,
   total,
   createEmployee,
+  importEmployees,
   removeEmployee,
   sort,
   updateEmployee
@@ -18,11 +19,12 @@ const {
 const route = useRoute()
 const selectedEmployee = ref<Employee | null>(null)
 const panelOpen = ref(route.query.create === '1')
+const importInput = ref<HTMLInputElement | null>(null)
 const toast = useToast()
 
 const departmentItems = computed(() => [
   { label: 'All departments', value: 'all' },
-  ...departments.value.map((department) => ({ label: department, value: department }))
+  ...departments.value.map((department: string) => ({ label: department, value: department }))
 ])
 
 const statusItems = [
@@ -30,6 +32,13 @@ const statusItems = [
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Future', value: 'FUTURE' },
   { label: 'Terminated', value: 'TERMINATED' }
+]
+
+const pageSizeItems = [
+  { label: '10 employees', value: 10 },
+  { label: '15 employees', value: 15 },
+  { label: '25 employees', value: 25 },
+  { label: '50 employees', value: 50 }
 ]
 
 const columns: { field: EmployeeSortField; label: string }[] = [
@@ -42,13 +51,16 @@ const columns: { field: EmployeeSortField; label: string }[] = [
   { field: 'status', label: 'Status' }
 ]
 
-const metrics = computed(() => {
-  const active = employees.value.filter((employee) => employee.status === 'ACTIVE').length
-  const future = employees.value.filter((employee) => employee.status === 'FUTURE').length
-  const terminated = employees.value.filter((employee) => employee.status === 'TERMINATED').length
-
-  return { active, future, terminated }
+const activeFilters = computed(() => {
+  const items: string[] = []
+  if (filters.search) items.push(`Search: ${filters.search}`)
+  if (filters.department !== 'all') items.push(`Department: ${filters.department}`)
+  if (filters.status !== 'all') items.push(`Status: ${filters.status.toLowerCase()}`)
+  return items
 })
+
+const firstVisibleRecord = computed(() => total.value === 0 ? 0 : ((filters.page - 1) * filters.pageSize) + 1)
+const lastVisibleRecord = computed(() => Math.min(filters.page * filters.pageSize, total.value))
 
 function createNewEmployee() {
   selectedEmployee.value = null
@@ -77,6 +89,38 @@ async function confirmDelete(employee: Employee) {
   toast.add({ title: 'Employee deleted', color: 'success' })
 }
 
+async function exportEmployeeData() {
+  const response = await fetch('/api/employees/export')
+  if (!response.ok) {
+    toast.add({ title: 'Export failed', color: 'error' })
+    return
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'purple-cross-employees.json'
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+async function importEmployeeData(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  try {
+    const rows = JSON.parse(await file.text())
+    await importEmployees(rows)
+    toast.add({ title: 'Employee data imported', color: 'success' })
+  } catch {
+    toast.add({ title: 'Import failed', description: 'Choose a valid Purple Cross employee JSON file.', color: 'error' })
+  } finally {
+    input.value = ''
+  }
+}
+
 function sortIcon(field: string) {
   if (filters.sortBy !== field) return 'i-lucide-chevrons-up-down'
   return filters.sortDirection === 'asc' ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'
@@ -84,34 +128,49 @@ function sortIcon(field: string) {
 </script>
 
 <template>
-  <section class="space-y-6">
-    <div class="flex flex-col gap-4 border-b border-default pb-6 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p class="text-sm font-medium text-primary">Purple Cross Ltd</p>
-        <h1 class="mt-1 text-3xl font-semibold tracking-normal">Employee management</h1>
-        <p class="mt-2 max-w-3xl text-sm text-muted">
-          Centralized employee records with HR-only confidential fields, sortable grid controls, and import/export support.
-        </p>
+  <section class="space-y-4">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="flex flex-wrap items-center gap-2 text-sm text-muted">
+        <span>Server-side table controls</span>
+        <UBadge v-if="activeFilters.length === 0" color="neutral" variant="subtle">No filters</UBadge>
+        <UBadge v-for="filter in activeFilters" :key="filter" color="neutral" variant="subtle">
+          {{ filter }}
+        </UBadge>
       </div>
-      <div class="flex gap-2">
-        <UButton to="/api/employees/export" icon="i-lucide-download" color="neutral" variant="outline">Export</UButton>
-        <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-inverted shadow-sm hover:bg-primary/90" @click="createNewEmployee"><UIcon name="i-lucide-user-plus" class="size-4" />Create employee</button>
-      </div>
-    </div>
 
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-      <MetricCard label="Matching records" :value="total" icon="i-lucide-database" />
-      <MetricCard label="Active on page" :value="metrics.active" icon="i-lucide-badge-check" />
-      <MetricCard label="Future starts" :value="metrics.future" icon="i-lucide-calendar-plus" />
-      <MetricCard label="Terminated" :value="metrics.terminated" icon="i-lucide-archive" />
+      <div class="flex flex-wrap justify-start gap-2 md:justify-end">
+        <input ref="importInput" class="hidden" type="file" accept="application/json,.json" @change="importEmployeeData">
+        <UButton icon="i-lucide-upload" color="neutral" variant="outline" class="whitespace-nowrap" @click="importInput?.click()">
+          Import JSON
+        </UButton>
+        <UButton icon="i-lucide-download" color="neutral" variant="outline" class="whitespace-nowrap" @click="exportEmployeeData">
+          Export JSON
+        </UButton>
+        <UButton icon="i-lucide-user-plus" class="whitespace-nowrap" @click="createNewEmployee">
+          Create employee
+        </UButton>
+      </div>
     </div>
 
     <div class="rounded-lg border border-default bg-default shadow-sm">
-      <div class="grid gap-3 border-b border-default p-4 md:grid-cols-[minmax(0,1fr)_13rem_11rem_8rem]">
-        <UInput v-model="filters.search" icon="i-lucide-search" placeholder="Search code, name, role, or department" />
-        <USelect v-model="filters.department" :items="departmentItems" />
-        <USelect v-model="filters.status" :items="statusItems" />
-        <USelect v-model="filters.pageSize" :items="[10, 15, 25, 50]" />
+      <div class="grid gap-3 border-b border-default p-4 md:grid-cols-[minmax(0,1fr)_13rem_11rem_11rem]">
+        <UFormField label="Search employees">
+          <UInput v-model="filters.search" icon="i-lucide-search" placeholder="Code, name, role, or department" class="w-full" />
+        </UFormField>
+        <UFormField label="Department">
+          <USelect v-model="filters.department" :items="departmentItems" class="w-full" />
+        </UFormField>
+        <UFormField label="Status">
+          <USelect v-model="filters.status" :items="statusItems" class="w-full" />
+        </UFormField>
+        <UFormField label="Items per page">
+          <USelect v-model="filters.pageSize" :items="pageSizeItems" class="w-full" />
+        </UFormField>
+      </div>
+
+      <div class="flex flex-col gap-2 border-b border-default px-4 py-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <span>Showing {{ firstVisibleRecord }}-{{ lastVisibleRecord }} of {{ total }} employees</span>
+        <span>Sorted by {{ columns.find(column => column.field === filters.sortBy)?.label }} {{ filters.sortDirection === 'asc' ? 'ascending' : 'descending' }}</span>
       </div>
 
       <UAlert v-if="error" color="error" variant="subtle" icon="i-lucide-circle-alert" title="Unable to load employees" class="m-4" />
@@ -121,7 +180,7 @@ function sortIcon(field: string) {
           <thead class="bg-muted/30 text-left text-xs uppercase text-muted">
             <tr>
               <th v-for="column in columns" :key="column.field" class="px-4 py-3 font-medium">
-                <button class="inline-flex items-center gap-1" @click="sort(column.field)">
+                <button class="inline-flex items-center gap-1 whitespace-nowrap" @click="sort(column.field)">
                   {{ column.label }}
                   <UIcon :name="sortIcon(column.field)" class="size-3.5" />
                 </button>
@@ -137,31 +196,31 @@ function sortIcon(field: string) {
               <td colspan="8" class="px-4 py-10 text-center text-muted">No employee records match the current filters.</td>
             </tr>
             <template v-else>
-            <tr v-for="employee in employees" :key="employee.id" class="hover:bg-muted/30">
-              <td class="whitespace-nowrap px-4 py-3 font-mono text-xs">{{ employee.code }}</td>
-              <td class="px-4 py-3">
-                <div class="font-medium">{{ employee.fullName }}</div>
-                <div class="text-xs text-muted">{{ formatSalary(employee.salaryCents) }}</div>
-              </td>
-              <td class="px-4 py-3">{{ employee.occupation }}</td>
-              <td class="px-4 py-3">{{ employee.department }}</td>
-              <td class="whitespace-nowrap px-4 py-3">{{ employee.dateOfEmployment }}</td>
-              <td class="whitespace-nowrap px-4 py-3">{{ employee.terminationDate ?? 'Current' }}</td>
-              <td class="px-4 py-3"><EmployeeStatusBadge :status="employee.status" /></td>
-              <td class="px-4 py-3">
-                <div class="flex justify-end gap-1">
-                  <UTooltip text="Edit employee"><UButton icon="i-lucide-pencil" color="neutral" variant="ghost" size="sm" @click="editEmployee(employee)" /></UTooltip>
-                  <UTooltip text="Delete employee"><UButton icon="i-lucide-trash-2" color="error" variant="ghost" size="sm" @click="confirmDelete(employee)" /></UTooltip>
-                </div>
-              </td>
-            </tr>
+              <tr v-for="employee in employees" :key="employee.id" class="hover:bg-muted/30">
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-xs">{{ employee.code }}</td>
+                <td class="px-4 py-3">
+                  <div class="font-medium">{{ employee.fullName }}</div>
+                  <div class="text-xs text-muted">{{ formatSalary(employee.salaryCents) }}</div>
+                </td>
+                <td class="px-4 py-3">{{ employee.occupation }}</td>
+                <td class="px-4 py-3">{{ employee.department }}</td>
+                <td class="whitespace-nowrap px-4 py-3">{{ employee.dateOfEmployment }}</td>
+                <td class="whitespace-nowrap px-4 py-3">{{ employee.terminationDate ?? 'Current' }}</td>
+                <td class="px-4 py-3"><EmployeeStatusBadge :status="employee.status" /></td>
+                <td class="px-4 py-3">
+                  <div class="flex justify-end gap-1">
+                    <UTooltip text="Edit employee"><UButton icon="i-lucide-pencil" color="neutral" variant="ghost" size="sm" @click="editEmployee(employee)" /></UTooltip>
+                    <UTooltip text="Delete employee"><UButton icon="i-lucide-trash-2" color="error" variant="ghost" size="sm" @click="confirmDelete(employee)" /></UTooltip>
+                  </div>
+                </td>
+              </tr>
             </template>
           </tbody>
         </table>
       </div>
 
       <div class="flex flex-col gap-3 border-t border-default p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-sm text-muted">Page {{ filters.page }} of {{ pageCount }} - {{ total }} records</p>
+        <p class="text-sm text-muted">Page {{ filters.page }} of {{ pageCount }}</p>
         <UPagination v-model:page="filters.page" :total="total" :items-per-page="filters.pageSize" />
       </div>
     </div>

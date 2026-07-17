@@ -67,7 +67,7 @@ function submit() {
 <template>
   <Teleport to="body">
     <div v-if="open" class="fixed inset-0 z-50 flex justify-end bg-black/30" @click.self="emit('close')">
-      <aside class="h-full w-full max-w-2xl overflow-y-auto border-l border-default bg-default p-6 shadow-xl">
+      <aside class="h-full w-full max-w-3xl overflow-y-auto border-l border-default bg-default p-6 shadow-xl">
         <div class="mb-6 flex items-start justify-between gap-4">
           <div>
             <h2 class="text-xl font-semibold">{{ employee ? 'Edit employee' : 'Create employee' }}</h2>
@@ -80,18 +80,17 @@ function submit() {
           <UAlert v-if="formError" color="error" variant="subtle" icon="i-lucide-circle-alert" :title="formError" />
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <UFormField label="Employee code" required><UInput v-model="state.code" placeholder="EMP051" /></UFormField>
-            <UFormField label="Full name" required><UInput v-model="state.fullName" placeholder="Jane Borg" /></UFormField>
-            <UFormField label="Occupation" required><UInput v-model="state.occupation" placeholder="Pharmacist" /></UFormField>
-            <UFormField label="Department" required><UInput v-model="state.department" placeholder="Research" /></UFormField>
-            <UFormField label="Employment date" required><UInput v-model="state.dateOfEmployment" type="date" /></UFormField>
-            <UFormField label="Termination date"><UInput v-model="state.terminationDate" type="date" /></UFormField>
-            <UFormField label="National ID"><UInput v-model="state.nationalId" placeholder="Optional" /></UFormField>
-            <UFormField label="Salary"><UInput v-model="state.salaryCents" type="number" min="0" step="100" placeholder="Cents" /></UFormField>
+            <UFormField label="Employee code" required><UInput v-model="state.code" placeholder="EMP051" class="w-full" /></UFormField>
+            <UFormField label="Full name" required><UInput v-model="state.fullName" placeholder="Jane Borg" class="w-full" /></UFormField>
+            <UFormField label="Occupation" required><UInput v-model="state.occupation" placeholder="Pharmacist" class="w-full" /></UFormField>
+            <UFormField label="Department" required><UInput v-model="state.department" placeholder="Research" class="w-full" /></UFormField>
+            <UFormField label="Employment date" required><UInput v-model="state.dateOfEmployment" type="date" class="w-full" /></UFormField>
+            <UFormField label="Termination date"><UInput v-model="state.terminationDate" type="date" class="w-full" /></UFormField>
+            <UFormField label="National ID"><UInput v-model="state.nationalId" placeholder="Optional" class="w-full" /></UFormField>
+            <UFormField label="Salary"><UInput v-model="state.salaryCents" type="number" min="0" step="100" placeholder="Cents" class="w-full" /></UFormField>
+            <UFormField label="Emergency contact"><UInput v-model="state.emergencyContact" placeholder="Name and phone number" class="w-full" /></UFormField>
+            <UFormField label="Confidential notes" class="sm:col-span-2"><UTextarea v-model="state.confidentialNotes" :rows="4" placeholder="Restricted HR notes" class="w-full" /></UFormField>
           </div>
-
-          <UFormField label="Emergency contact"><UInput v-model="state.emergencyContact" placeholder="Name and phone number" /></UFormField>
-          <UFormField label="Confidential notes"><UTextarea v-model="state.confidentialNotes" :rows="4" placeholder="Restricted HR notes" /></UFormField>
 
           <div class="flex justify-end gap-2 border-t border-default pt-4">
             <UButton color="neutral" variant="ghost" type="button" @click="emit('close')">Cancel</UButton>

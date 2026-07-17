@@ -67,6 +67,11 @@ export function useEmployees() {
     await refresh()
   }
 
+  async function importEmployees(rows: unknown) {
+    await $fetch('/api/employees/import', { method: 'POST', body: rows as Record<string, unknown>[] })
+    await refresh()
+  }
+
   function sort(field: EmployeeSortField) {
     if (filters.sortBy === field) {
       filters.sortDirection = filters.sortDirection === 'asc' ? 'desc' : 'asc'
@@ -86,6 +91,7 @@ export function useEmployees() {
     total,
     createEmployee,
     refresh,
+    importEmployees,
     removeEmployee,
     sort,
     updateEmployee

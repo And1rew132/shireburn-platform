@@ -1,4 +1,4 @@
-FROM node:20.19-alpine AS deps
+FROM node:22.12-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* turbo.json tsconfig.json ./
 COPY apps/web/package.json apps/web/package.json
@@ -12,12 +12,12 @@ COPY . .
 RUN npm run db:generate
 RUN npm run build -- --filter @purple-cross/web
 
-FROM node:20.19-alpine AS runtime
+FROM node:22.12-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=build /app/apps/web/.output ./.output
 COPY --from=build /app/packages/db/prisma ./packages/db/prisma
-COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=build /app/node_modules/.prisma ./.output/server/node_modules/.prisma
+COPY --from=build /app/node_modules/@prisma ./.output/server/node_modules/@prisma
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]

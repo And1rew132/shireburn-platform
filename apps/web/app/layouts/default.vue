@@ -1,10 +1,6 @@
 <script setup lang="ts">
-const config = useRuntimeConfig()
-
 const links = [
-  { label: 'Employees', icon: 'i-lucide-users', to: '/employees' },
-  { label: 'Import / Export', icon: 'i-lucide-database', to: '/employees?panel=import' },
-  { label: 'Audit Trail', icon: 'i-lucide-clipboard-list', to: '/employees?panel=audit' }
+  { label: 'Employees', icon: 'i-lucide-users', to: '/employees' }
 ]
 </script>
 
@@ -17,24 +13,16 @@ const links = [
             <UIcon name="i-lucide-cross" class="size-5" />
           </div>
           <div>
-            <p class="text-sm font-semibold leading-5">{{ config.public.appName }}</p>
-            <p class="text-xs text-muted">Purple Cross Ltd onboarding workspace</p>
+            <p class="text-sm font-semibold leading-5">Purple Cross Ltd.</p>
+            <p class="text-xs text-muted">Employee Management</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <UButton
-            icon="i-lucide-bell"
-            color="neutral"
-            variant="ghost"
-            aria-label="Notifications"
-          />
-          <UUser
-            name="Sarah Mallia"
-            description="Product Admin"
-            :avatar="{ src: 'https://i.pravatar.cc/96?img=47' }"
-          />
-        </div>
+        <UUser
+          name="Sarah Mallia"
+          description="Product Admin"
+          :avatar="{ src: 'https://i.pravatar.cc/96?img=47' }"
+        />
       </div>
     </header>
 

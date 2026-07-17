@@ -16,7 +16,7 @@ docker network create traefik
 TRAEFIK_HOST=purple-cross.localhost docker compose -f deploy/docker/docker-compose.yml --profile app up -d --build
 ```
 
-The default labels route `Host(purple-cross.localhost)` through the `web` entrypoint to the Nuxt container on port `3000`. Override `TRAEFIK_HOST`, `TRAEFIK_ENTRYPOINTS`, and `TRAEFIK_NETWORK` from `.env` or the shell.
+The default labels route `Host(purple-cross.localhost)` through the `web` entrypoint to the Nuxt container on port `3000`. Override `TRAEFIK_HOST`, `TRAEFIK_ENTRYPOINTS`, `TRAEFIK_NETWORK`, `TRAEFIK_TLS`, `TRAEFIK_CERT_RESOLVER`, and `WEB_PORT` from `.env` or the shell.
 
 ## Production Image
 

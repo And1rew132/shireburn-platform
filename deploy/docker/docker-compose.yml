@@ -30,12 +30,14 @@ services:
       SESSION_SECRET: local-dev-session-secret-change-me
       NUXT_PUBLIC_APP_NAME: Purple Cross Employee Management
     ports:
-      - "3000:3000"
+      - "${WEB_PORT:-3000}:3000"
     labels:
       traefik.enable: "true"
       traefik.docker.network: "${TRAEFIK_NETWORK:-traefik}"
       traefik.http.routers.purple-cross.rule: "Host(`${TRAEFIK_HOST:-purple-cross.localhost}`)"
       traefik.http.routers.purple-cross.entrypoints: "${TRAEFIK_ENTRYPOINTS:-web}"
+      traefik.http.routers.purple-cross.tls: "${TRAEFIK_TLS:-false}"
+      traefik.http.routers.purple-cross.tls.certresolver: "${TRAEFIK_CERT_RESOLVER:-myresolver}"
       traefik.http.routers.purple-cross.service: purple-cross
       traefik.http.services.purple-cross.loadbalancer.server.port: "3000"
       traefik.http.middlewares.purple-cross-compress.compress: "true"
