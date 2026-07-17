@@ -1,6 +1,6 @@
-# Purple Cross Employee Dashboard Guide
+# Shireburn Platform Employee Management Guide
 
-This is a standalone interview assessment repo for the Shireburn Purple Cross Ltd case study.
+This is a standalone interview assessment repo for the Shireburn Platform employee management case study, using Purple Cross Ltd. as the client.
 
 ## Stack
 

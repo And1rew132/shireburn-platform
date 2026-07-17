@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     sessionSecret: process.env.SESSION_SECRET,
     public: {
-      appName: process.env.NUXT_PUBLIC_APP_NAME ?? 'Purple Cross Employee Management'
+      appName: process.env.NUXT_PUBLIC_APP_NAME ?? 'Shireburn Platform - Employee Management'
     }
   },
   typescript: {

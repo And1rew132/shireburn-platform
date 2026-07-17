@@ -1,9 +1,9 @@
-nameOverride: purple-cross
+nameOverride: shireburn-employee-management
 namespace:
   create: true
-  name: purple-cross
+  name: shireburn-employee-management
 
-host: purple-cross.andrewazzopardi.dev
+host: shireburn-employee-management.andrewazzopardi.dev
 
 imagePullSecrets: []
 
@@ -15,7 +15,7 @@ image:
 app:
   replicaCount: 1
   port: 3000
-  publicAppName: Purple Cross Employee Management
+  publicAppName: Shireburn Platform - Employee Management
   resources:
     requests:
       cpu: 50m
@@ -25,7 +25,7 @@ app:
       memory: 512Mi
 
 secrets:
-  name: purple-cross-secrets
+  name: shireburn-employee-management-secrets
   databaseUrl: ""
   sessionSecret: ""
 

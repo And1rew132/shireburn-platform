@@ -3,7 +3,8 @@ import { expect, test } from '@playwright/test'
 test('employee dashboard supports search and create workflow entry', async ({ page }) => {
   await page.goto('/employees')
 
-  await expect(page.getByText('Purple Cross Ltd.')).toBeVisible()
+  await expect(page.getByText('Shireburn Platform')).toBeVisible()
+  await expect(page.getByText('Client: Purple Cross Ltd.')).toBeVisible()
   await page.getByPlaceholder('Code, name, role, or department').fill('Nicole')
   await expect(page.getByText('Nicole Berry')).toBeVisible()
 

@@ -1,4 +1,4 @@
-name: purple-cross-employee-dashboard
+name: shireburn-platform
 
 services:
   postgres:
@@ -19,7 +19,7 @@ services:
     networks:
       - internal
 
-  web:
+  employee-management-web:
     profiles:
       - app
     build:
@@ -28,20 +28,20 @@ services:
     environment:
       DATABASE_URL: postgresql://purple_cross:purple_cross_dev_password@postgres:5432/purple_cross?schema=public
       SESSION_SECRET: local-dev-session-secret-change-me
-      NUXT_PUBLIC_APP_NAME: Purple Cross Employee Management
+      NUXT_PUBLIC_APP_NAME: Shireburn Platform - Employee Management
     ports:
       - "${WEB_PORT:-3000}:3000"
     labels:
       traefik.enable: "true"
       traefik.docker.network: "${TRAEFIK_NETWORK:-traefik}"
-      traefik.http.routers.purple-cross.rule: "Host(`${TRAEFIK_HOST:-purple-cross.localhost}`)"
-      traefik.http.routers.purple-cross.entrypoints: "${TRAEFIK_ENTRYPOINTS:-web}"
-      traefik.http.routers.purple-cross.tls: "${TRAEFIK_TLS:-false}"
-      traefik.http.routers.purple-cross.tls.certresolver: "${TRAEFIK_CERT_RESOLVER:-myresolver}"
-      traefik.http.routers.purple-cross.service: purple-cross
-      traefik.http.services.purple-cross.loadbalancer.server.port: "3000"
-      traefik.http.middlewares.purple-cross-compress.compress: "true"
-      traefik.http.routers.purple-cross.middlewares: purple-cross-compress
+      traefik.http.routers.shireburn-employee-management.rule: "Host(`${TRAEFIK_HOST:-shireburn-platform.localhost}`)"
+      traefik.http.routers.shireburn-employee-management.entrypoints: "${TRAEFIK_ENTRYPOINTS:-web}"
+      traefik.http.routers.shireburn-employee-management.tls: "${TRAEFIK_TLS:-false}"
+      traefik.http.routers.shireburn-employee-management.tls.certresolver: "${TRAEFIK_CERT_RESOLVER:-myresolver}"
+      traefik.http.routers.shireburn-employee-management.service: shireburn-employee-management
+      traefik.http.services.shireburn-employee-management.loadbalancer.server.port: "3000"
+      traefik.http.middlewares.shireburn-employee-management-compress.compress: "true"
+      traefik.http.routers.shireburn-employee-management.middlewares: shireburn-employee-management-compress
     depends_on:
       postgres:
         condition: service_healthy

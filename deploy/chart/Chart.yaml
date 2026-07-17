@@ -1,5 +1,5 @@
 apiVersion: v2
-name: purple-cross-employee-dashboard
-description: Purple Cross employee dashboard assessment
+name: shireburn-employee-management
+description: Shireburn Platform employee management assessment for Purple Cross Ltd.
 version: 0.1.0
 appVersion: "0.1.0"

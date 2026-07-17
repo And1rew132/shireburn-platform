@@ -10,19 +10,22 @@ const links = [
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center gap-3">
           <div class="grid size-9 place-items-center rounded-md bg-primary text-inverted">
-            <UIcon name="i-lucide-cross" class="size-5" />
+            <UIcon name="i-lucide-building-2" class="size-5" />
           </div>
           <div>
-            <p class="text-sm font-semibold leading-5">Purple Cross Ltd.</p>
+            <p class="text-sm font-semibold leading-5">Shireburn Platform</p>
             <p class="text-xs text-muted">Employee Management</p>
           </div>
         </div>
 
-        <UUser
-          name="Sarah Mallia"
-          description="Product Admin"
-          :avatar="{ src: 'https://i.pravatar.cc/96?img=47' }"
-        />
+        <div class="flex items-center gap-3">
+          <UBadge color="neutral" variant="subtle" class="hidden sm:inline-flex">Client: Purple Cross Ltd.</UBadge>
+          <UUser
+            name="Sarah Mallia"
+            description="Product Admin"
+            :avatar="{ src: 'https://i.pravatar.cc/96?img=47' }"
+          />
+        </div>
       </div>
     </header>
 

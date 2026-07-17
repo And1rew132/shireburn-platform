@@ -1,8 +1,8 @@
-# Purple Cross Employee Dashboard
+# Shireburn Platform - Employee Management
 
-Nuxt 4 / Nuxt UI 4 assessment for the Purple Cross Ltd employee management case study.
+Nuxt 4 / Nuxt UI 4 assessment for Shireburn Platform Employee Management, configured with Purple Cross Ltd. as the client dataset.
 
-The app replaces an Excel-based employee list with a centralized dashboard for searchable, sortable, pageable, editable employee records. It uses Nuxt server routes for the backend, Prisma/PostgreSQL for persistence, and shared Zod schemas for validation.
+The module replaces an Excel-based employee list with a centralized dashboard for searchable, sortable, pageable, editable employee records. It uses Nuxt server routes for the backend, Prisma/PostgreSQL for persistence, and shared Zod schemas for validation.
 
 ## Included
 
