@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  TERMINATED
+  FUTURE
+}
+
+model Employee {
+  id               String         @id @default(cuid())
+  code             String         @unique
+  fullName         String
+  occupation       String
+  department       String
+  dateOfEmployment DateTime
+  terminationDate  DateTime?
+  status           EmployeeStatus
+  nationalId       String?
+  salaryCents      Int?
+  emergencyContact String?
+  confidentialNotes String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([department])
+  @@index([status])
+  @@index([fullName])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  entityCode String
+  action     String
+  summary    String
+  actor      String
+  createdAt  DateTime @default(now())
+
+  @@index([entityCode])
+}
