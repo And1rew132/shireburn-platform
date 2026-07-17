@@ -9,7 +9,8 @@ This is a standalone interview assessment repo for the Shireburn Purple Cross Lt
 - App: Nuxt 4 with the Nuxt 4 `app/`, `server/`, and `shared/` layout.
 - UI: Nuxt UI 4 and Tailwind CSS.
 - Database: Prisma with PostgreSQL.
-- Tests: Vitest for unit/API-oriented tests and Playwright for E2E flows.
+- Tests: Vitest 4 for unit/API-oriented tests with coverage and Playwright for E2E flows.
+- Component review: Storybook 10 for Nuxt component stories.
 
 ## Layout
 
@@ -32,6 +33,8 @@ npm run db:migrate
 npm run db:seed
 npm run dev
 npm test
+npm run coverage
+npm run storybook:build
 npm run build
 ```
 

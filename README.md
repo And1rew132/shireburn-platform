@@ -11,9 +11,9 @@ The app replaces an Excel-based employee list with a centralized dashboard for s
 - Delete action with confirmation.
 - JSON export endpoint and JSON import endpoint.
 - Prisma schema, migration, seed script, and bundled sample `purple_cross_employees.json`.
-- Unit tests for shared employee logic and import parsing.
+- Unit tests with coverage for shared employee logic, import parsing, and Nuxt UI components.
 - Playwright smoke flow for the dashboard.
-- Component structure kept ready for Storybook once the Nuxt 4 integration package supports Nuxt 4 peers.
+- Storybook 10 component catalog for dashboard and employee form components.
 - Docker Compose, production Dockerfile, and Helm chart.
 
 ## Stack
@@ -22,7 +22,7 @@ The app replaces an Excel-based employee list with a centralized dashboard for s
 - Nuxt UI 4 and Tailwind CSS.
 - Prisma 6 and PostgreSQL.
 - npm workspaces and Turborepo.
-- Vitest and Playwright.
+- Vitest 4, Storybook 10, and Playwright.
 
 ## Quick Start
 
@@ -44,6 +44,8 @@ Open `http://localhost:3000/employees`.
 
 ```bash
 npm test
+npm run coverage
+npm run storybook:build
 npm run build
 npm run test:e2e
 ```

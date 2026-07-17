@@ -12,3 +12,4 @@ test-results
 dist
 storybook-static
 packages/db/prisma/migrations/*/migration_lock.toml
+apps/web/.nuxtrc

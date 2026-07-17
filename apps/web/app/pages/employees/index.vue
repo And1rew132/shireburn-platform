@@ -130,14 +130,6 @@ function sortIcon(field: string) {
 <template>
   <section class="space-y-4">
     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <div class="flex flex-wrap items-center gap-2 text-sm text-muted">
-        <span>Server-side table controls</span>
-        <UBadge v-if="activeFilters.length === 0" color="neutral" variant="subtle">No filters</UBadge>
-        <UBadge v-for="filter in activeFilters" :key="filter" color="neutral" variant="subtle">
-          {{ filter }}
-        </UBadge>
-      </div>
-
       <div class="flex flex-wrap justify-start gap-2 md:justify-end">
         <input ref="importInput" class="hidden" type="file" accept="application/json,.json" @change="importEmployeeData">
         <UButton icon="i-lucide-upload" color="neutral" variant="outline" class="whitespace-nowrap" @click="importInput?.click()">

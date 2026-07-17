@@ -24,3 +24,7 @@ Status is derived from employment and termination dates:
 ## UI
 
 The default layout provides an app bar, navigation sidebar, and logged-in user badge. The employee page is the first product screen, with dense operational controls instead of a landing page.
+
+## Component Catalog
+
+Storybook covers reusable dashboard components and the employee form drawer so reviewers can inspect component states independently from seeded API data.

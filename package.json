@@ -18,13 +18,23 @@
     "preview": "npm --workspace @purple-cross/web run preview",
     "test": "turbo run test",
     "test:e2e": "playwright test",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "storybook": "npm --workspace @purple-cross/web run storybook",
+    "storybook:build": "npm --workspace @purple-cross/web run storybook:build"
   },
   "devDependencies": {
+    "@nuxt/test-utils": "^4.0.3",
     "@playwright/test": "^1.56.1",
+    "@storybook/addon-a11y": "^10.5.2",
+    "@storybook/vue3-vite": "^10.5.2",
+    "@types/node": "^26.1.1",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vitest/coverage-v8": "^4.1.10",
+    "happy-dom": "^20.10.6",
+    "storybook": "^10.5.2",
     "turbo": "^2.6.3",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.7",
+    "vitest": "^4.1.10",
     "vue-tsc": "^3.3.7"
   },
   "engines": {

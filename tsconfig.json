@@ -5,6 +5,9 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "target": "ES2022",
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals",
+      "node"
+    ]
   }
 }

@@ -9,7 +9,9 @@
     "dev": "nuxt dev --host 0.0.0.0 --port 3000",
     "lint": "nuxt prepare && nuxt typecheck",
     "preview": "nuxt preview --host 0.0.0.0 --port 3000",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build"
   },
   "dependencies": {
     "@nuxt/ui": "^4.3.0",
@@ -21,11 +23,11 @@
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.21.0",
+    "@nuxt/test-utils": "^4.0.3",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^20.0.10",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.7"
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=22.12.0",
