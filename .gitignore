@@ -1,0 +1,14 @@
+node_modules
+.nuxt
+.output
+.turbo
+coverage
+playwright-report
+test-results
+.env
+.env.*
+!.env.example
+*.log
+dist
+storybook-static
+packages/db/prisma/migrations/*/migration_lock.toml
