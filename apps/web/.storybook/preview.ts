@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/vue3-vite'
 import { setup } from '@storybook/vue3-vite'
 import { createMemoryHistory, createRouter } from 'vue-router'
+import NuxtUI from '@nuxt/ui/vue-plugin'
 import '../app/assets/css/main.css'
 
 setup((app) => {
@@ -10,6 +11,7 @@ setup((app) => {
   })
 
   app.use(router)
+  app.use(NuxtUI)
 })
 
 const preview: Preview = {
