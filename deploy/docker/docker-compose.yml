@@ -1,0 +1,42 @@
+name: purple-cross-employee-dashboard
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: purple_cross
+      POSTGRES_USER: purple_cross
+      POSTGRES_PASSWORD: purple_cross_dev_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U purple_cross -d purple_cross"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    profiles:
+      - app
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://purple_cross:purple_cross_dev_password@postgres:5432/purple_cross?schema=public
+      SESSION_SECRET: local-dev-session-secret-change-me
+      NUXT_PUBLIC_APP_NAME: Purple Cross Employee Management
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:

@@ -1,0 +1,46 @@
+nameOverride: purple-cross
+namespace:
+  create: true
+  name: purple-cross
+
+host: purple-cross.andrewazzopardi.dev
+
+imagePullSecrets: []
+
+image:
+  repository: ghcr.io/and1rew132/purple-cross-employee-dashboard
+  tag: latest
+  pullPolicy: Always
+
+app:
+  replicaCount: 1
+  port: 3000
+  publicAppName: Purple Cross Employee Management
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+secrets:
+  name: purple-cross-secrets
+  databaseUrl: ""
+  sessionSecret: ""
+
+postgres:
+  enabled: true
+  image: postgres:17-alpine
+  database: purple_cross
+  username: purple_cross
+  password: change-me
+  persistence:
+    size: 1Gi
+
+ingress:
+  enabled: true
+  entryPoints:
+    - web
+    - websecure
+  certResolver: myresolver

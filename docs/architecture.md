@@ -1,0 +1,26 @@
+# Architecture
+
+The assessment is intentionally a single deployable Nuxt application. Nuxt owns the frontend and Nitro server routes, which keeps the case-study deployment small while still exercising backend design, validation, database access, and browser behavior.
+
+## Boundaries
+
+- `apps/web/app` contains layouts, pages, composables, and dashboard components.
+- `apps/web/server/api` exposes the employee HTTP API.
+- `packages/shared` contains DTOs, Zod schemas, and pure helpers used on both sides.
+- `packages/db` contains Prisma, repository methods, import parsing, and seed tooling.
+
+API handlers stay thin. They parse route/query/body inputs and delegate persistence work to `packages/db`.
+
+## Data Model
+
+`Employee` keeps the supplied case-study fields and adds confidential HR fields to make the edit workflow realistic: national ID, salary, emergency contact, and confidential notes. `AuditLog` records create, update, delete, and import actions.
+
+Status is derived from employment and termination dates:
+
+- `ACTIVE`: started and not terminated before today.
+- `FUTURE`: employment date is after today.
+- `TERMINATED`: termination date is before today.
+
+## UI
+
+The default layout provides an app bar, navigation sidebar, and logged-in user badge. The employee page is the first product screen, with dense operational controls instead of a landing page.

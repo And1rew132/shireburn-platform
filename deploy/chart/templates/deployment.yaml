@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.nameOverride }}-web
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.nameOverride }}-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.nameOverride }}-web
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          env:
+            - name: NUXT_PUBLIC_APP_NAME
+              value: {{ .Values.app.publicAppName | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secrets.name }}
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.app.port }}
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.app.port }}
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
