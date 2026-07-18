@@ -6,7 +6,7 @@ The assessment is intentionally a single deployable Nuxt application. Nuxt owns 
 
 - `apps/web/app` contains layouts, pages, composables, and dashboard components.
 - `apps/web/server/api` exposes the employee HTTP API.
-- `packages/shared` contains DTOs, Zod schemas, and pure helpers used on both sides.
+- `packages/shared` contains DTOs, Zod schemas, query types, and pure helpers used on both sides.
 - `packages/db` contains Prisma, repository methods, import parsing, and seed tooling.
 
 API handlers stay thin. They parse route/query/body inputs and delegate persistence work to `packages/db`.
@@ -21,9 +21,13 @@ Status is derived from employment and termination dates:
 - `FUTURE`: employment date is after today.
 - `TERMINATED`: termination date is before today.
 
+Status is not persisted in PostgreSQL. Server-side status filtering is translated into date predicates, and status sorting derives statuses before pagination.
+
 ## UI
 
-The default layout provides an app bar, navigation sidebar, and logged-in user badge. The employee page is the first product screen, with dense operational controls instead of a landing page.
+The default layout uses Nuxt UI dashboard primitives: `UDashboardGroup` for the shell, `UDashboardSidebar` for desktop navigation and the mobile drawer, and `UDashboardNavbar` for the app bar. The employee page is the first product screen, with dense operational controls instead of a landing page.
+
+The Shireburn Platform is the product brand. Purple Cross Ltd. is represented as the active client context.
 
 ## Component Catalog
 

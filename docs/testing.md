@@ -4,10 +4,7 @@
 
 Shared helpers are covered in `packages/shared/src/*.test.ts`:
 
-- status derivation
-- filtering
-- sorting
-- pagination
+- employment status derivation from date fields
 
 Database import parsing is covered in `packages/db/src/importEmployees.test.ts`.
 
@@ -21,12 +18,18 @@ npm test
 
 ## E2E Tests
 
-Playwright tests live in `e2e/` and cover the dashboard smoke path: loading the employee table, searching, and opening the create form.
+Playwright tests live in `e2e/` and cover the dashboard smoke path: loading the employee table, checking responsive dashboard chrome, searching, and opening the create form.
 
-Run with a seeded database:
+Run with a seeded database and the default dev server:
 
 ```bash
 npm run test:e2e
+```
+
+When the app is already running in Docker on a custom port, pass the base URL and skip Playwright's built-in dev-server startup:
+
+```bash
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3012 npm run test:e2e
 ```
 
 ## Coverage
