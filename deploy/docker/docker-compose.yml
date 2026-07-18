@@ -24,13 +24,27 @@ services:
       - app
     build:
       context: ../..
-      dockerfile: deploy/docker/Dockerfile
+      dockerfile: deploy/docker/dev/Dockerfile
+    working_dir: /workspace
+    command: >-
+      bash -lc "
+      set -euo pipefail &&
+      npm run db:generate &&
+      npm --workspace @purple-cross/web run dev
+      "
     environment:
+      CHOKIDAR_USEPOLLING: "false"
+      FORCE_COLOR: 1
+      NODE_ENV: development
+      NUXT_TELEMETRY_DISABLED: "1"
       DATABASE_URL: postgresql://purple_cross:purple_cross_dev_password@postgres:5432/purple_cross?schema=public
       SESSION_SECRET: local-dev-session-secret-change-me
       NUXT_PUBLIC_APP_NAME: Shireburn Platform - Employee Management
+      __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: "${TRAEFIK_HOST:-shireburn-platform.localhost}"
     ports:
       - "${WEB_PORT:-3000}:3000"
+    volumes:
+      - ../..:/workspace
     labels:
       traefik.enable: "true"
       traefik.docker.network: "${TRAEFIK_NETWORK:-traefik}"
@@ -46,28 +60,41 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health >/dev/null 2>&1"]
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/api/health >/dev/null 2>&1"]
       interval: 10s
       timeout: 3s
       retries: 10
     networks:
       - internal
       - traefik
-
+    tty: true
+    stdin_open: true
+    init: true
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
   storybook:
     profiles:
       - storybook
     build:
       context: ../..
-      dockerfile: deploy/docker/Dockerfile
-      target: storybook
+      dockerfile: deploy/docker/dev/Dockerfile
+    working_dir: /workspace
+    command: >-
+      bash -lc "
+      set -euo pipefail &&
+      node node_modules/storybook/dist/bin/dispatcher.js dev --config-dir apps/web/.storybook --host 0.0.0.0 --port 6006 --no-open
+      "
     environment:
+      CHOKIDAR_USEPOLLING: "false"
+      FORCE_COLOR: 1
+      NODE_ENV: development
       STORYBOOK_DISABLE_TELEMETRY: "1"
       STORYBOOK_HMR_HOST: "${STORYBOOK_HMR_HOST:-}"
       STORYBOOK_HMR_PROTOCOL: "${STORYBOOK_HMR_PROTOCOL:-wss}"
       STORYBOOK_HMR_CLIENT_PORT: "${STORYBOOK_HMR_CLIENT_PORT:-443}"
     ports:
       - "${STORYBOOK_PORT:-6006}:6006"
+    volumes:
+      - ../..:/workspace
     labels:
       traefik.enable: "true"
       traefik.docker.network: "${TRAEFIK_NETWORK:-traefik}"
@@ -80,13 +107,16 @@ services:
       traefik.http.middlewares.shireburn-storybook-compress.compress: "true"
       traefik.http.routers.shireburn-storybook.middlewares: shireburn-storybook-compress
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:6006 >/dev/null 2>&1"]
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:6006 >/dev/null 2>&1"]
       interval: 10s
       timeout: 3s
       retries: 10
     networks:
       - traefik
-
+    tty: true
+    stdin_open: true
+    init: true
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
 volumes:
   postgres-data:
 

@@ -39,7 +39,8 @@ npm run build
 ```
 
 Use `docker compose -f deploy/docker/docker-compose.yml up -d postgres` for local PostgreSQL.
-Use `docker compose -f deploy/docker/docker-compose.yml --profile storybook up -d --build storybook` to run Storybook in Docker.
+Use `docker compose -f deploy/docker/docker-compose.yml --profile app up -d --build employee-management-web` to run the Nuxt app in a bind-mounted dev container.
+Use `docker compose -f deploy/docker/docker-compose.yml --profile storybook up -d --build storybook` to run Storybook in a bind-mounted dev container. Source changes are live-mounted; rebuild only when the dev Dockerfile or base dependencies change.
 
 ## Operational Notes
 
