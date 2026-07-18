@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "coverage": "vitest run --coverage",
+    "coverage": "nuxt prepare && vitest run --coverage",
     "dev": "nuxt dev --host 0.0.0.0 --port 3000",
     "lint": "nuxt prepare && nuxt typecheck",
     "preview": "nuxt preview --host 0.0.0.0 --port 3000",
-    "test": "vitest run --passWithNoTests",
+    "test": "nuxt prepare && vitest run --passWithNoTests",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"
   },
