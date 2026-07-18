@@ -1,25 +1,21 @@
 <script setup lang="ts">
-const navigationOpen = ref(false)
-
 const links = [
   { label: 'Employees', icon: 'i-lucide-users', to: '/employees' }
 ]
 </script>
 
 <template>
-  <div class="dashboard-shell text-highlighted">
-    <AppBar @toggle-navigation="navigationOpen = true" />
+  <UDashboardGroup class="dashboard-shell text-highlighted">
+    <LeftDrawer :links="links" />
 
-    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[16rem_minmax(0,1fr)] lg:px-8">
-      <LeftDrawer
-        v-model:open="navigationOpen"
-        :links="links"
-        @close="navigationOpen = false"
-      />
+    <UDashboardPanel>
+      <AppBar />
 
-      <main>
-        <slot />
-      </main>
-    </div>
-  </div>
+      <div class="flex-1 overflow-y-auto">
+        <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <slot />
+        </main>
+      </div>
+    </UDashboardPanel>
+  </UDashboardGroup>
 </template>
