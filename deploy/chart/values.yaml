@@ -9,7 +9,7 @@ imagePullSecrets: []
 
 image:
   repository: ghcr.io/and1rew132/shireburn-platform
-  tag: 82020d54dc88ed5364c54adb50f05122f39017c4
+  tag: 608ced3dcd3ef4ca38ddee392b2e234e541f4393
   pullPolicy: Always
 
 app:
