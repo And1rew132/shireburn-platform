@@ -55,17 +55,28 @@ Do not commit personal/internal hostnames or secrets. The compose labels route t
 - Secret for `SESSION_SECRET`.
 - DB-provisioner integration through `database.existingSecret` and `database.urlKey`.
 - Optional demo PostgreSQL deployment for non-production review environments.
-- Traefik `IngressRoute` for the public host.
+- Traefik `IngressRoute` for direct cluster ingress. On CRC, the public `andrewazzopardi.dev` route is managed by `cr/technology/cloud-as-code` `traefik-gateway`.
+
+The live review deployment runs on `crc-k3s` at `shireburn-employee-management.andrewazzopardi.dev`. The database is provisioned by `cr/technology/cloud-as-code` `db-provisioner` using:
+
+- Database: `shireburn_employee_management`
+- User: `shireburn_employee_management`
+- Password key: `SHIREBURN_EMPLOYEE_MANAGEMENT_PASSWORD` in `postgres/postgres-app-passwords`
+- App secret: `shireburn-employee-management/shireburn-employee-management-db` with `DATABASE_URL`
 
 Production should provide `DATABASE_URL` from the database provisioner, for example:
 
 ```bash
-helm upgrade --install shireburn-employee-management deploy/chart \
+helm template shireburn-employee-management deploy/chart \
   --namespace shireburn-employee-management \
-  --create-namespace \
+  --set namespace.name=shireburn-employee-management \
+  --set host=shireburn-employee-management.andrewazzopardi.dev \
   --set secrets.sessionSecret="$SESSION_SECRET" \
   --set database.existingSecret=shireburn-employee-management-db \
-  --set database.urlKey=DATABASE_URL
+  --set database.urlKey=DATABASE_URL \
+  --set postgres.enabled=false \
+  --set imagePullSecrets[0].name=ghcr-creds \
+  | ssh crc-k3s "kubectl apply -f -"
 ```
 
 For a temporary self-contained review deployment, enable the bundled Postgres chart values instead:

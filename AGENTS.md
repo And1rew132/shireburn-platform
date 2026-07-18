@@ -20,7 +20,7 @@ This is a standalone interview assessment repo for the Shireburn Platform employ
 - `packages/db/` contains Prisma schema, client setup, repository helpers, import parsing, and seed tooling.
 - `e2e/` contains Playwright browser tests.
 - `deploy/docker/` contains local review and production container assets.
-- `deploy/chart/` contains the Kubernetes Helm chart. Production expects a DB-provisioner-created secret via `database.existingSecret`; chart-managed Postgres is for temporary review only.
+- `deploy/chart/` contains the Kubernetes Helm chart. Production expects a DB-provisioner-created secret via `database.existingSecret`; chart-managed Postgres is for temporary review only. The live review deployment belongs on `crc-k3s`, not `cr-k3s`.
 - `docs/` contains reviewer-facing architecture, testing, and deployment notes.
 
 ## Data Notes
@@ -59,7 +59,7 @@ PLAYWRIGHT_BASE_URL=http://127.0.0.1:3012 npm run test:e2e
 
 ## Operational Notes
 
-- Do not commit real secrets. `DATABASE_URL` must come from the DB provisioner or an external secret in production; `SESSION_SECRET` must come from deployment secrets.
+- Do not commit real secrets. `DATABASE_URL` must come from the DB provisioner or an external secret in production; `SESSION_SECRET` must come from deployment secrets. The CRC DB provisioner and public gateway are managed in `/home/andrew/entities/cr/technology/cloud-as-code`.
 - Do not commit personal/local Traefik hosts. Put machine-specific host values in an uncommitted `.env` file or shell environment.
 - Keep the provided `purple_cross_employees.json` in the repo root so the submission is self-contained.
 - If build, test, deployment, database, or local Docker commands change, update this file in the same change.
