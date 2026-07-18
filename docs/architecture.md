@@ -13,7 +13,7 @@ API handlers stay thin. They parse route/query/body inputs and delegate persiste
 
 ## Data Model
 
-`Employee` keeps the supplied case-study fields and adds confidential HR fields to make the edit workflow realistic: national ID, salary, emergency contact, and confidential notes. `AuditLog` records create, update, delete, and import actions.
+`Employee` keeps the supplied case-study fields and adds confidential HR fields to make the edit workflow realistic: national ID, salary, emergency contact, and confidential notes. Employment status is derived from employment dates at read time so it stays deterministic as dates move past today.
 
 Status is derived from employment and termination dates:
 

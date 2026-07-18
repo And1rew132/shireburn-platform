@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { parseEmployeeImport, toEmployeeSeedRow } from './importEmployees'
 
 describe('employee import', () => {
-  it('parses source rows and derives a seed row', () => {
+  it('parses source rows and creates a seed row without persisted status', () => {
     const [employee] = parseEmployeeImport([
       {
         code: 'EMP001',
@@ -15,7 +15,7 @@ describe('employee import', () => {
     ])
 
     expect(employee?.code).toBe('EMP001')
-    expect(toEmployeeSeedRow(employee!).status).toBe('ACTIVE')
+    expect(toEmployeeSeedRow(employee!)).not.toHaveProperty('status')
   })
 
   it('rejects non-array imports', () => {

@@ -17,15 +17,6 @@ for (const employee of employees) {
   })
 }
 
-await prisma.auditLog.create({
-  data: {
-    entityCode: 'IMPORT',
-    action: 'IMPORT',
-    summary: `Imported ${employees.length} Purple Cross employees from JSON`,
-    actor: 'seed'
-  }
-})
-
 await prisma.$disconnect()
 
 console.log(`Seeded ${employees.length} employees`)

@@ -1,8 +1,4 @@
-import {
-  deriveEmployeeStatus,
-  employeeImportSchema,
-  type EmployeeImportInput
-} from '@purple-cross/shared'
+import { employeeImportSchema, type EmployeeImportInput } from '@purple-cross/shared'
 
 export function parseEmployeeImport(input: unknown): EmployeeImportInput[] {
   if (!Array.isArray(input)) {
@@ -26,7 +22,6 @@ export function toEmployeeSeedRow(input: EmployeeImportInput) {
     department: input.department,
     dateOfEmployment: new Date(`${input.dateOfEmployment}T00:00:00.000Z`),
     terminationDate: input.terminationDate ? new Date(`${input.terminationDate}T00:00:00.000Z`) : null,
-    status: deriveEmployeeStatus(input),
     nationalId: null,
     salaryCents: null,
     emergencyContact: null,

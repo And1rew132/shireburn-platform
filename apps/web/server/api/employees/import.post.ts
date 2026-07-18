@@ -12,14 +12,5 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  await prisma.auditLog.create({
-    data: {
-      entityCode: 'IMPORT',
-      action: 'IMPORT',
-      summary: `Imported ${rows.length} employee records`,
-      actor: 'demo.admin@purplecross.test'
-    }
-  })
-
   return { imported: rows.length }
 })
