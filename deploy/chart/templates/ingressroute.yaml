@@ -4,6 +4,8 @@ kind: IngressRoute
 metadata:
   name: {{ .Values.nameOverride }}-web
   namespace: {{ .Values.namespace.name }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
 spec:
   entryPoints:
     {{- range .Values.ingress.entryPoints }}

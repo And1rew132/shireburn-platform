@@ -45,6 +45,7 @@ postgres:
 
 ingress:
   enabled: true
+  className: traefik
   entryPoints:
     - web
     - websecure
