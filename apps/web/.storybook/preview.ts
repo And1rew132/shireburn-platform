@@ -23,6 +23,9 @@ const applyColorScheme = (scheme: 'light' | 'dark') => {
 }
 
 const preview: Preview = {
+  initialGlobals: {
+    colorScheme: 'dark'
+  },
   globalTypes: {
     colorScheme: {
       description: 'Preview color scheme',
@@ -35,7 +38,7 @@ const preview: Preview = {
         ],
         dynamicTitle: true
       },
-      defaultValue: 'light'
+      defaultValue: 'dark'
     }
   },
   decorators: [
