@@ -14,13 +14,13 @@ This is a standalone interview assessment repo for the Shireburn Platform employ
 
 ## Layout
 
-- `apps/web/` contains the Nuxt frontend and Nitro API routes.
-- `apps/web/app/layouts/default.vue` uses Nuxt UI dashboard primitives (`UDashboardGroup`, `UDashboardSidebar`, and `UDashboardNavbar`) and renders page-configured floating actions.
+- `apps/employee-management/` contains the Nuxt frontend and Nitro API routes.
+- `apps/employee-management/app/layouts/default.vue` uses Nuxt UI dashboard primitives (`UDashboardGroup`, `UDashboardSidebar`, and `UDashboardNavbar`) and renders page-configured floating actions.
 - `packages/shared/` contains Zod schemas, DTOs, query types, and pure formatting/status helpers shared by the app, API, tests, and seed tools.
 - `packages/db/` contains Prisma schema, client setup, repository helpers, import parsing, and seed tooling.
 - `e2e/` contains Playwright browser tests.
 - `deploy/docker/` contains local review and production container assets.
-- `deploy/chart/` contains the Kubernetes Helm chart.
+- `deploy/chart/` contains the Kubernetes Helm chart. Production expects a DB-provisioner-created secret via `database.existingSecret`; chart-managed Postgres is for temporary review only.
 - `docs/` contains reviewer-facing architecture, testing, and deployment notes.
 
 ## Data Notes
@@ -59,7 +59,7 @@ PLAYWRIGHT_BASE_URL=http://127.0.0.1:3012 npm run test:e2e
 
 ## Operational Notes
 
-- Do not commit real secrets. `DATABASE_URL` and `SESSION_SECRET` must come from the environment or deployment secrets.
+- Do not commit real secrets. `DATABASE_URL` must come from the DB provisioner or an external secret in production; `SESSION_SECRET` must come from deployment secrets.
 - Do not commit personal/local Traefik hosts. Put machine-specific host values in an uncommitted `.env` file or shell environment.
 - Keep the provided `purple_cross_employees.json` in the repo root so the submission is self-contained.
 - If build, test, deployment, database, or local Docker commands change, update this file in the same change.

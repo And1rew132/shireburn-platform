@@ -42,16 +42,41 @@ Do not commit personal/internal hostnames or secrets. The compose labels route t
 
 ## Production Image
 
-`deploy/docker/Dockerfile` builds one Nuxt/Nitro runtime image. It installs workspace dependencies, generates Prisma client code, builds the Nuxt app, and runs `.output/server/index.mjs`.
+`deploy/docker/Dockerfile` builds one Nuxt/Nitro runtime image for `@shireburn-platform/employee-management`. It installs workspace dependencies, generates Prisma client code, builds the Nuxt app, and runs `.output/server/index.mjs`.
+
+`.github/workflows/container.yml` runs on `main`, installs dependencies, generates Prisma client code, runs unit tests, builds the app, publishes `ghcr.io/and1rew132/shireburn-platform`, and pins `deploy/chart/values.yaml` to the pushed commit SHA with a `[skip ci]` deployment commit.
 
 ## Kubernetes
 
-`deploy/chart` contains a small Helm chart with:
+`deploy/chart` contains a small production Helm chart with:
 
 - Deployment and Service for the Nuxt app.
 - Migration Job for Prisma migrations.
-- Secret for `DATABASE_URL` and `SESSION_SECRET`.
-- Optional demo PostgreSQL deployment.
+- Secret for `SESSION_SECRET`.
+- DB-provisioner integration through `database.existingSecret` and `database.urlKey`.
+- Optional demo PostgreSQL deployment for non-production review environments.
 - Traefik `IngressRoute` for the public host.
 
-Real deployments should source secrets from cluster secret management, not from committed values.
+Production should provide `DATABASE_URL` from the database provisioner, for example:
+
+```bash
+helm upgrade --install shireburn-employee-management deploy/chart \
+  --namespace shireburn-employee-management \
+  --create-namespace \
+  --set secrets.sessionSecret="$SESSION_SECRET" \
+  --set database.existingSecret=shireburn-employee-management-db \
+  --set database.urlKey=DATABASE_URL
+```
+
+For a temporary self-contained review deployment, enable the bundled Postgres chart values instead:
+
+```bash
+helm upgrade --install shireburn-employee-management deploy/chart \
+  --namespace shireburn-employee-management \
+  --create-namespace \
+  --set secrets.sessionSecret="$SESSION_SECRET" \
+  --set postgres.enabled=true \
+  --set postgres.password="$POSTGRES_PASSWORD"
+```
+
+Do not commit personal hostnames, `DATABASE_URL`, database passwords, or session secrets.

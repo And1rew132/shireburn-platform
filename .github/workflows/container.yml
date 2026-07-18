@@ -1,0 +1,70 @@
+name: Build Container
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build application
+        run: npm run build -- --filter @shireburn-platform/employee-management
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: deploy/docker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/and1rew132/shireburn-platform:main
+            ghcr.io/and1rew132/shireburn-platform:${{ github.sha }}
+
+      - name: Pin deployed image to commit
+        if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+        run: |
+          sed -i "/repository: ghcr.io\/and1rew132\/shireburn-platform/{n;s/tag: .*/tag: ${GITHUB_SHA}/;}" deploy/chart/values.yaml
+          if git diff --quiet -- deploy/chart/values.yaml; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deploy/chart/values.yaml
+          git commit -m "Deploy ${GITHUB_SHA} [skip ci]"
+          git push

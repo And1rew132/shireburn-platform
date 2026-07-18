@@ -29,6 +29,10 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.secrets.name }}
+            {{- if .Values.database.existingSecret }}
+            - secretRef:
+                name: {{ .Values.database.existingSecret }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /api/health
