@@ -23,6 +23,7 @@
     "storybook:build": "npm --workspace @shireburn-platform/employee-management run storybook:build"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.118",
     "@nuxt/test-utils": "^4.0.3",
     "@playwright/test": "^1.56.1",
     "@storybook/addon-a11y": "^10.5.2",

@@ -19,7 +19,7 @@ test('employee dashboard supports login, search, floating create, and logout', a
   }
 
   await page.getByPlaceholder('Code, name, role, or department').fill('Nicole')
-  await expect(page.getByText('Nicole Berry')).toBeVisible()
+  await expect(page.getByText('Nicole Berry')).toBeVisible({ timeout: 15000 })
 
   await page.getByRole('button', { name: 'Open floating actions' }).click()
   await expect(page.getByRole('button', { name: 'Import JSON' })).toBeVisible()

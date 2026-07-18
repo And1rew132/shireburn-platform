@@ -12,25 +12,29 @@ const demoUser = {
 export function useAuth() {
   const sessionEmail = useCookie<string | null>('shireburn_demo_session', {
     default: () => null,
-    sameSite: 'lax'
+    sameSite: 'lax',
+    path: '/'
   })
+  const sessionState = useState<string | null>('shireburn_demo_session', () => sessionEmail.value)
 
   const user = computed<DemoUser | null>(() => {
-    if (!sessionEmail.value) return null
+    if (!sessionState.value) return null
 
     return {
       ...demoUser,
-      email: sessionEmail.value
+      email: sessionState.value
     }
   })
-  const loggedIn = computed(() => Boolean(sessionEmail.value))
+  const loggedIn = computed(() => Boolean(sessionState.value))
 
   async function login(email: string) {
+    sessionState.value = email
     sessionEmail.value = email
     await navigateTo('/employees', { replace: true })
   }
 
   async function logout() {
+    sessionState.value = null
     sessionEmail.value = null
     await navigateTo('/login', { replace: true })
   }

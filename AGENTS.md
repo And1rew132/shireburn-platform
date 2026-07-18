@@ -62,4 +62,5 @@ PLAYWRIGHT_BASE_URL=http://127.0.0.1:3012 npm run test:e2e
 - Do not commit real secrets. `DATABASE_URL` must come from the DB provisioner or an external secret in production; `SESSION_SECRET` must come from deployment secrets. Environment-specific hosts, image tags, runtime secrets, and cluster placement belong to the chart consumer, not this application repo.
 - Do not commit personal/local Traefik hosts. Put machine-specific host values in an uncommitted `.env` file or shell environment.
 - Keep the provided `purple_cross_employees.json` in the repo root so the submission is self-contained.
+- CI runs unit tests, coverage, Storybook build, database migrations/seed, Playwright E2E, production build, and image publish on `main`. Keep the PostgreSQL service and CI `DATABASE_URL` aligned with Prisma migrations.
 - If build, test, deployment, database, or local Docker commands change, update this file in the same change.
