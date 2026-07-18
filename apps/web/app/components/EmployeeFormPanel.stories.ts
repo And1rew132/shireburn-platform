@@ -35,5 +35,5 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Create: Story = {}
+export const Create: Story = { args: {} }
 export const Edit: Story = { args: { employee } }
