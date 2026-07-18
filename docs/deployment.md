@@ -55,9 +55,9 @@ Do not commit personal/internal hostnames or secrets. The compose labels route t
 - Secret for `SESSION_SECRET`.
 - DB-provisioner integration through `database.existingSecret` and `database.urlKey`.
 - Optional demo PostgreSQL deployment for non-production review environments.
-- Traefik `IngressRoute` for direct cluster ingress. On CRC, the public `andrewazzopardi.dev` route is managed by `cr/technology/cloud-as-code` `traefik-gateway`.
+- Traefik `IngressRoute` for direct cluster ingress. The app workload runs on `cr-k3s`. The public `andrewazzopardi.dev` edge route is managed by `cr/technology/cloud-as-code` `traefik-gateway` on `crc-k3s` and forwards to `cr-k3s`.
 
-The live review deployment runs on `crc-k3s` at `shireburn-employee-management.andrewazzopardi.dev`. The database is provisioned by `cr/technology/cloud-as-code` `db-provisioner` using:
+The live review deployment runs on `cr-k3s` at `shireburn-employee-management.andrewazzopardi.dev`. The database is provisioned by `cr/technology/cloud-as-code` `db-provisioner` on `crc-k3s` using:
 
 - Database: `shireburn_employee_management`
 - User: `shireburn_employee_management`
@@ -77,8 +77,8 @@ helm template shireburn-employee-management deploy/chart \
   --set database.urlKey=DATABASE_URL \
   --set postgres.enabled=false \
   --set imagePullSecrets[0].name=ghcr-creds \
-  --set image.tag=<commit-sha-owned-by-crc-gitops> \
-  | ssh crc-k3s "kubectl apply -f -"
+  --set image.tag=<commit-sha-owned-by-cr-gitops> \
+  | ssh cr-k3s "kubectl apply -f -"
 ```
 
 For a temporary self-contained review deployment, enable the bundled Postgres chart values instead:
