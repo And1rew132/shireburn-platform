@@ -9,7 +9,7 @@ imagePullSecrets: []
 
 image:
   repository: ghcr.io/and1rew132/shireburn-platform
-  tag: 608ced3dcd3ef4ca38ddee392b2e234e541f4393
+  tag: main
   pullPolicy: Always
 
 app:
@@ -26,6 +26,7 @@ app:
 
 secrets:
   name: shireburn-employee-management-secrets
+  existingSecret: ""
   sessionSecret: ""
 
 database:

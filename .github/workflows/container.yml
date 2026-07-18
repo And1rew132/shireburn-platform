@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   packages: write
 
 jobs:
@@ -55,16 +55,3 @@ jobs:
           tags: |
             ghcr.io/and1rew132/shireburn-platform:main
             ghcr.io/and1rew132/shireburn-platform:${{ github.sha }}
-
-      - name: Pin deployed image to commit
-        if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
-        run: |
-          sed -i "/repository: ghcr.io\/and1rew132\/shireburn-platform/{n;s/tag: .*/tag: ${GITHUB_SHA}/;}" deploy/chart/values.yaml
-          if git diff --quiet -- deploy/chart/values.yaml; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add deploy/chart/values.yaml
-          git commit -m "Deploy ${GITHUB_SHA} [skip ci]"
-          git push

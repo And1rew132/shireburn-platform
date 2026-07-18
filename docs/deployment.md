@@ -44,7 +44,7 @@ Do not commit personal/internal hostnames or secrets. The compose labels route t
 
 `deploy/docker/Dockerfile` builds one Nuxt/Nitro runtime image for `@shireburn-platform/employee-management`. It installs workspace dependencies, generates Prisma client code, builds the Nuxt app, and runs `.output/server/index.mjs`.
 
-`.github/workflows/container.yml` runs on `main`, installs dependencies, generates Prisma client code, runs unit tests, builds the app, publishes `ghcr.io/and1rew132/shireburn-platform`, and pins `deploy/chart/values.yaml` to the pushed commit SHA with a `[skip ci]` deployment commit.
+`.github/workflows/container.yml` runs on `main`, installs dependencies, generates Prisma client code, runs unit tests, builds the app, and publishes `ghcr.io/and1rew132/shireburn-platform` with `main` and commit-SHA tags. It does not edit chart values; live image pins belong to the chart consumer in CRC GitOps.
 
 ## Kubernetes
 
@@ -63,6 +63,7 @@ The live review deployment runs on `crc-k3s` at `shireburn-employee-management.a
 - User: `shireburn_employee_management`
 - Password key: `SHIREBURN_EMPLOYEE_MANAGEMENT_PASSWORD` in `postgres/postgres-app-passwords`
 - App secret: `shireburn-employee-management/shireburn-employee-management-db` with `DATABASE_URL`
+- Runtime secret: `shireburn-employee-management/shireburn-employee-management-secrets` with `SESSION_SECRET`
 
 Production should provide `DATABASE_URL` from the database provisioner, for example:
 
@@ -71,11 +72,12 @@ helm template shireburn-employee-management deploy/chart \
   --namespace shireburn-employee-management \
   --set namespace.name=shireburn-employee-management \
   --set host=shireburn-employee-management.andrewazzopardi.dev \
-  --set secrets.sessionSecret="$SESSION_SECRET" \
+  --set secrets.existingSecret=shireburn-employee-management-secrets \
   --set database.existingSecret=shireburn-employee-management-db \
   --set database.urlKey=DATABASE_URL \
   --set postgres.enabled=false \
   --set imagePullSecrets[0].name=ghcr-creds \
+  --set image.tag=<commit-sha-owned-by-crc-gitops> \
   | ssh crc-k3s "kubectl apply -f -"
 ```
 

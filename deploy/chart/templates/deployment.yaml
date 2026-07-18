@@ -28,7 +28,7 @@ spec:
               value: {{ .Values.app.publicAppName | quote }}
           envFrom:
             - secretRef:
-                name: {{ .Values.secrets.name }}
+                name: {{ default .Values.secrets.name .Values.secrets.existingSecret }}
             {{- if .Values.database.existingSecret }}
             - secretRef:
                 name: {{ .Values.database.existingSecret }}
