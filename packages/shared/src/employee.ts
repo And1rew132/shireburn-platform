@@ -110,43 +110,6 @@ export function formatSalary(cents?: number | null): string {
   }).format(cents / 100)
 }
 
-export function filterAndSortEmployees(employees: Employee[], query: EmployeeQuery): Employee[] {
-  const search = query.search.toLowerCase()
-  const filtered = employees.filter((employee) => {
-    const matchesSearch = !search || [
-      employee.code,
-      employee.fullName,
-      employee.occupation,
-      employee.department
-    ].some((value) => value.toLowerCase().includes(search))
-
-    const matchesDepartment = query.department === 'all' || employee.department === query.department
-    const matchesStatus = query.status === 'all' || employee.status === query.status
-
-    return matchesSearch && matchesDepartment && matchesStatus
-  })
-
-  return [...filtered].sort((left: Employee, right: Employee) => {
-    const direction = query.sortDirection === 'asc' ? 1 : -1
-    const leftValue = sortableValue(left, query.sortBy)
-    const rightValue = sortableValue(right, query.sortBy)
-
-    if (leftValue < rightValue) return -1 * direction
-    if (leftValue > rightValue) return 1 * direction
-    return left.code.localeCompare(right.code)
-  })
-}
-
-export function paginateEmployees(employees: Employee[], page: number, pageSize: number): Employee[] {
-  const start = (page - 1) * pageSize
-  return employees.slice(start, start + pageSize)
-}
-
-function sortableValue(employee: Employee, field: EmployeeSortField): string {
-  if (field === 'terminationDate') return employee.terminationDate ?? '9999-12-31'
-  return String(employee[field] ?? '').toLowerCase()
-}
-
 function dateOnly(value: string): Date {
   return new Date(`${value}T00:00:00.000Z`)
 }

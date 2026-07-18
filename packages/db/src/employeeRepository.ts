@@ -3,7 +3,6 @@ import {
   deriveEmployeeStatus,
   employeeFormSchema,
   employeeQuerySchema,
-  paginateEmployees,
   type Employee,
   type EmployeeFormInput,
   type EmployeeListResult,
@@ -31,7 +30,7 @@ export async function listEmployees(rawQuery: unknown, client: PrismaClient = pr
     const sorted = sortEmployeesByDerivedStatus(rows.map((employee) => toEmployeeDto(employee, now)), query.sortDirection)
 
     return {
-      data: paginateEmployees(sorted, query.page, query.pageSize),
+      data: paginate(sorted, query.page, query.pageSize),
       total,
       page: query.page,
       pageSize: query.pageSize,
@@ -152,6 +151,11 @@ function sortEmployeesByDerivedStatus(employees: Employee[], direction: Employee
     if (statusComparison !== 0) return statusComparison
     return left.code.localeCompare(right.code)
   })
+}
+
+function paginate<T>(items: T[], page: number, pageSize: number): T[] {
+  const start = (page - 1) * pageSize
+  return items.slice(start, start + pageSize)
 }
 
 function currentDateOnly(now = new Date()): Date {
