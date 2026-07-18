@@ -48,37 +48,32 @@ Do not commit personal/internal hostnames or secrets. The compose labels route t
 
 ## Kubernetes
 
-`deploy/chart` contains a small production Helm chart with:
+`deploy/chart` contains a reusable Helm chart with:
 
 - Deployment and Service for the Nuxt app.
 - Migration Job for Prisma migrations.
-- Secret for `SESSION_SECRET`.
-- DB-provisioner integration through `database.existingSecret` and `database.urlKey`.
+- Secret rendering for simple review deployments.
+- External secret support for `SESSION_SECRET` through `secrets.existingSecret`.
+- External database support through `database.existingSecret` and `database.urlKey`.
 - Optional demo PostgreSQL deployment for non-production review environments.
-- Traefik `IngressRoute` for direct cluster ingress. The app workload runs on `cr-k3s`. The public `andrewazzopardi.dev` edge route is managed by `cr/technology/cloud-as-code` `traefik-gateway` on `crc-k3s` and forwards to `cr-k3s`.
+- Optional Traefik `IngressRoute` for direct cluster ingress.
 
-The live review deployment runs on `cr-k3s` at `shireburn-employee-management.andrewazzopardi.dev`. The database is provisioned by `cr/technology/cloud-as-code` `db-provisioner` on `crc-k3s` using:
+This repository defines how the app can be deployed. It does not own live environment placement, public hostnames, runtime secrets, or deployed image pins. Those values should be set by the chart consumer in the relevant infrastructure repository.
 
-- Database: `shireburn_employee_management`
-- User: `shireburn_employee_management`
-- Password key: `SHIREBURN_EMPLOYEE_MANAGEMENT_PASSWORD` in `postgres/postgres-app-passwords`
-- App secret: `shireburn-employee-management/shireburn-employee-management-db` with `DATABASE_URL`
-- Runtime secret: `shireburn-employee-management/shireburn-employee-management-secrets` with `SESSION_SECRET`
-
-Production should provide `DATABASE_URL` from the database provisioner, for example:
+A production-style chart consumer should provide an existing runtime secret and an existing database secret, for example:
 
 ```bash
 helm template shireburn-employee-management deploy/chart \
   --namespace shireburn-employee-management \
   --set namespace.name=shireburn-employee-management \
-  --set host=shireburn-employee-management.andrewazzopardi.dev \
+  --set host=<environment-hostname> \
   --set secrets.existingSecret=shireburn-employee-management-secrets \
   --set database.existingSecret=shireburn-employee-management-db \
   --set database.urlKey=DATABASE_URL \
   --set postgres.enabled=false \
-  --set imagePullSecrets[0].name=ghcr-creds \
-  --set image.tag=<commit-sha-owned-by-cr-gitops> \
-  | ssh cr-k3s "kubectl apply -f -"
+  --set imagePullSecrets[0].name=<image-pull-secret> \
+  --set image.tag=<deployed-image-tag> \
+  | kubectl apply -f -
 ```
 
 For a temporary self-contained review deployment, enable the bundled Postgres chart values instead:
@@ -92,4 +87,4 @@ helm upgrade --install shireburn-employee-management deploy/chart \
   --set postgres.password="$POSTGRES_PASSWORD"
 ```
 
-Do not commit personal hostnames, `DATABASE_URL`, database passwords, or session secrets.
+Do not commit personal hostnames, `DATABASE_URL`, database passwords, session secrets, or live image pins to this repository.

@@ -3,7 +3,7 @@ namespace:
   create: true
   name: shireburn-employee-management
 
-host: shireburn-employee-management.andrewazzopardi.dev
+host: shireburn-employee-management.example.com
 
 imagePullSecrets: []
 
