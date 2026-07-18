@@ -1,7 +1,7 @@
 node_modules
 .nuxt
-apps/web/auto-imports.d.ts
-apps/web/components.d.ts
+apps/employee-management/auto-imports.d.ts
+apps/employee-management/components.d.ts
 .output
 .turbo
 coverage
@@ -14,4 +14,4 @@ test-results
 dist
 storybook-static
 packages/db/prisma/migrations/*/migration_lock.toml
-apps/web/.nuxtrc
+apps/employee-management/.nuxtrc

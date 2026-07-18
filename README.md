@@ -15,7 +15,7 @@ The module replaces an Excel-based employee list with a centralized dashboard fo
 - Unit tests with coverage for shared employee logic, import parsing, and Nuxt UI components.
 - Playwright smoke flow for login, logout, desktop/mobile dashboard behavior, search, and floating create entry.
 - Storybook 10 component catalog for dashboard and employee form components.
-- Docker Compose dev containers, production Dockerfile, and Helm chart.
+- Docker Compose dev containers, production Dockerfile, GHCR workflow, and Helm chart.
 
 ## Stack
 
@@ -36,7 +36,7 @@ docker compose -f deploy/docker/docker-compose.yml up -d postgres
 npm run db:generate
 npm run db:migrate
 npm run db:seed
-npm run dev -- --filter @purple-cross/web
+npm run dev -- --filter @shireburn-platform/employee-management
 ```
 
 Open `http://localhost:3000/employees`. Protected pages redirect to `/login`; the demo login accepts the prefilled credentials.
@@ -100,4 +100,4 @@ PLAYWRIGHT_BASE_URL=http://127.0.0.1:3012 npm run test:e2e
 
 ## Repository Target
 
-This folder is self-contained and can be pushed as its own repository under the `and1rew132` organization.
+This folder is self-contained and targets the `And1rew132/shireburn-platform` repository.

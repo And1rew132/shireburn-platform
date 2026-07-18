@@ -8,7 +8,7 @@ import {
   type EmployeeListResult,
   type EmployeeQuery,
   type EmployeeStatus
-} from '@purple-cross/shared'
+} from '@shireburn-platform/shared'
 import { prisma } from './client'
 
 export async function listEmployees(rawQuery: unknown, client: PrismaClient = prisma): Promise<EmployeeListResult> {

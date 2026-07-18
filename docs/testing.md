@@ -8,7 +8,7 @@ Shared helpers are covered in `packages/shared/src/*.test.ts`:
 
 Database import parsing is covered in `packages/db/src/importEmployees.test.ts`.
 
-Nuxt component tests live beside the components in `apps/web/app/components/__tests__/` and cover the status badge, metric card, and employee form validation path.
+Nuxt component tests live beside the components in `apps/employee-management/app/components/__tests__/` and cover the status badge, metric card, and employee form validation path.
 
 Run:
 
@@ -42,7 +42,7 @@ npm run coverage
 
 ## Storybook
 
-Storybook stories live beside the Nuxt components in `apps/web/app/components/*.stories.ts`. Build Storybook before handoff so the component catalog is verified.
+Storybook stories live beside the Nuxt components in `apps/employee-management/app/components/*.stories.ts`. Build Storybook before handoff so the component catalog is verified.
 
 ```bash
 npm run storybook

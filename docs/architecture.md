@@ -4,8 +4,8 @@ The assessment is intentionally a single deployable Nuxt application. Nuxt owns 
 
 ## Boundaries
 
-- `apps/web/app` contains layouts, pages, composables, and dashboard components.
-- `apps/web/server/api` exposes the employee HTTP API.
+- `apps/employee-management/app` contains layouts, pages, composables, and dashboard components.
+- `apps/employee-management/server/api` exposes the employee HTTP API.
 - `packages/shared` contains DTOs, Zod schemas, query types, and pure helpers used on both sides.
 - `packages/db` contains Prisma, repository methods, import parsing, and seed tooling.
 

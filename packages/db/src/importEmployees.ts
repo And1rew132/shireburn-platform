@@ -1,4 +1,4 @@
-import { employeeImportSchema, type EmployeeImportInput } from '@purple-cross/shared'
+import { employeeImportSchema, type EmployeeImportInput } from '@shireburn-platform/shared'
 
 export function parseEmployeeImport(input: unknown): EmployeeImportInput[] {
   if (!Array.isArray(input)) {

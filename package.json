@@ -1,5 +1,5 @@
 {
-  "name": "purple-cross-employee-dashboard",
+  "name": "shireburn-platform",
   "private": true,
   "version": "0.1.0",
   "packageManager": "npm@10.8.2",
@@ -10,17 +10,17 @@
   "scripts": {
     "build": "turbo run build",
     "coverage": "turbo run coverage",
-    "db:generate": "npm --workspace @purple-cross/db run generate",
-    "db:migrate": "npm --workspace @purple-cross/db run migrate",
-    "db:seed": "npm --workspace @purple-cross/db run seed",
+    "db:generate": "npm --workspace @shireburn-platform/db run generate",
+    "db:migrate": "npm --workspace @shireburn-platform/db run migrate",
+    "db:seed": "npm --workspace @shireburn-platform/db run seed",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "preview": "npm --workspace @purple-cross/web run preview",
+    "preview": "npm --workspace @shireburn-platform/employee-management run preview",
     "test": "turbo run test",
     "test:e2e": "playwright test",
     "test:unit": "vitest run",
-    "storybook": "npm --workspace @purple-cross/web run storybook",
-    "storybook:build": "npm --workspace @purple-cross/web run storybook:build"
+    "storybook": "npm --workspace @shireburn-platform/employee-management run storybook",
+    "storybook:build": "npm --workspace @shireburn-platform/employee-management run storybook:build"
   },
   "devDependencies": {
     "@nuxt/test-utils": "^4.0.3",
