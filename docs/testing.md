@@ -18,7 +18,7 @@ npm test
 
 ## E2E Tests
 
-Playwright tests live in `e2e/` and cover the dashboard smoke path: loading the employee table, checking responsive dashboard chrome, searching, and opening the create form.
+Playwright tests live in `e2e/` and cover the dashboard smoke path: login, loading the employee table, checking responsive dashboard chrome, searching, opening the create form from the floating action dial, and logout.
 
 Run with a seeded database and the default dev server:
 

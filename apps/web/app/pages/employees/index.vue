@@ -1,6 +1,23 @@
 <script setup lang="ts">
 import { formatSalary, type Employee, type EmployeeFormInput, type EmployeeSortField } from '@purple-cross/shared'
 
+definePageMeta({
+  title: 'Employees',
+  layout: {
+    name: 'default',
+    props: {
+      pageTitle: 'Employee Management',
+      floatingActions: [
+        {
+          icon: 'i-lucide-user-plus',
+          title: 'Create employee',
+          action: 'employees:create'
+        }
+      ]
+    }
+  }
+})
+
 const {
   departments,
   employees,
@@ -21,6 +38,8 @@ const selectedEmployee = ref<Employee | null>(null)
 const panelOpen = ref(route.query.create === '1')
 const importInput = ref<HTMLInputElement | null>(null)
 const toast = useToast()
+const { registerFloatingActions } = useFloatingActions()
+let cleanupFloatingActions: (() => void) | undefined
 
 const departmentItems = computed(() => [
   { label: 'All departments', value: 'all' },
@@ -125,6 +144,14 @@ function sortIcon(field: string) {
   if (filters.sortBy !== field) return 'i-lucide-chevrons-up-down'
   return filters.sortDirection === 'asc' ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'
 }
+
+onMounted(() => {
+  cleanupFloatingActions = registerFloatingActions({
+    'employees:create': createNewEmployee
+  })
+})
+
+onBeforeUnmount(() => cleanupFloatingActions?.())
 </script>
 
 <template>
@@ -137,9 +164,6 @@ function sortIcon(field: string) {
         </UButton>
         <UButton icon="i-lucide-download" color="neutral" variant="outline" class="whitespace-nowrap" @click="exportEmployeeData">
           Export JSON
-        </UButton>
-        <UButton icon="i-lucide-user-plus" class="whitespace-nowrap" @click="createNewEmployee">
-          Create employee
         </UButton>
       </div>
     </div>

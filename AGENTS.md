@@ -15,7 +15,7 @@ This is a standalone interview assessment repo for the Shireburn Platform employ
 ## Layout
 
 - `apps/web/` contains the Nuxt frontend and Nitro API routes.
-- `apps/web/app/layouts/default.vue` uses Nuxt UI dashboard primitives (`UDashboardGroup`, `UDashboardSidebar`, and `UDashboardNavbar`).
+- `apps/web/app/layouts/default.vue` uses Nuxt UI dashboard primitives (`UDashboardGroup`, `UDashboardSidebar`, and `UDashboardNavbar`) and renders page-configured floating actions.
 - `packages/shared/` contains Zod schemas, DTOs, query types, and pure formatting/status helpers shared by the app, API, tests, and seed tools.
 - `packages/db/` contains Prisma schema, client setup, repository helpers, import parsing, and seed tooling.
 - `e2e/` contains Playwright browser tests.
@@ -28,6 +28,8 @@ This is a standalone interview assessment repo for the Shireburn Platform employ
 - Employment status is derived from `dateOfEmployment` and `terminationDate` at read time; do not add it back as a persisted database column.
 - Audit log storage was intentionally removed. Do not reintroduce audit writes unless the feature is implemented end to end.
 - Sorting/filtering/pagination are server-side concerns in `packages/db/src/employeeRepository.ts`; keep shared package logic limited to schemas, DTO types, and pure reusable helpers.
+- Demo authentication is client-side only through `useAuth`; do not treat it as production security.
+- Floating actions are configured through typed Nuxt layout props in `definePageMeta({ layout: { name: 'default', props: { floatingActions: [...] } } })` and connected to runtime handlers through `useFloatingActions`.
 
 ## Commands
 

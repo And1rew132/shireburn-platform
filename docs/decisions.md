@@ -20,9 +20,17 @@ npm workspaces and Turborepo keep the monorepo simple while still separating the
 
 The supplied JSON contains basic employee details. The implementation adds optional confidential HR fields so the create/edit workflow aligns with the brief's confidential-information requirement while preserving the original import format.
 
+## Floating Actions
+
+Page-level create actions are configured through Nuxt layout props and executed through `useFloatingActions`. This keeps the employee page from owning fixed-position chrome while still letting pages register local handlers such as opening the create employee form.
+
 ## Derived Employment Status
 
 Employment status is not stored in the database. It is derived from `dateOfEmployment` and `terminationDate` whenever employee DTOs are returned, which avoids stale records when the current date changes. Server-side filtering converts status selections into date predicates; sorting by status derives status values before pagination.
+
+## Demo Authentication
+
+The login/logout flow is intentionally lightweight and client-side. It gives reviewers a realistic dashboard entry point without introducing account storage, password handling, or unrelated authentication infrastructure.
 
 ## No Audit Log Stub
 

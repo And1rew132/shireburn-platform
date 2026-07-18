@@ -25,9 +25,13 @@ Status is not persisted in PostgreSQL. Server-side status filtering is translate
 
 ## UI
 
-The default layout uses Nuxt UI dashboard primitives: `UDashboardGroup` for the shell, `UDashboardSidebar` for desktop navigation and the mobile drawer, and `UDashboardNavbar` for the app bar. The employee page is the first product screen, with dense operational controls instead of a landing page.
+The default layout uses Nuxt UI dashboard primitives: `UDashboardGroup` for the shell, `UDashboardSidebar` for desktop navigation and the mobile drawer, and `UDashboardNavbar` for the app bar. It also renders a reusable floating action dial from typed layout props supplied by each page. The employee page is the first product screen, with dense operational controls instead of a landing page.
 
 The Shireburn Platform is the product brand. Purple Cross Ltd. is represented as the active client context.
+
+## Authentication
+
+The login flow is a demo gate for the assessment. `useAuth` stores a local session cookie, global route middleware redirects unauthenticated protected pages to `/login`, and the dashboard navbar exposes logout. Real deployments should replace this with server-backed authentication.
 
 ## Component Catalog
 

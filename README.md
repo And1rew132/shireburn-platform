@@ -11,9 +11,9 @@ The module replaces an Excel-based employee list with a centralized dashboard fo
 - Delete action with confirmation.
 - JSON export endpoint and JSON import endpoint.
 - Prisma schema, migrations, seed script, and bundled sample `purple_cross_employees.json`.
-- Nuxt UI dashboard shell with sidebar, navbar, and logged-in user badge.
+- Nuxt UI dashboard shell with sidebar, navbar, logged-in user badge, logout action, and layout-driven floating actions.
 - Unit tests with coverage for shared employee logic, import parsing, and Nuxt UI components.
-- Playwright smoke flow for desktop and mobile dashboard behavior.
+- Playwright smoke flow for login, logout, desktop/mobile dashboard behavior, search, and floating create entry.
 - Storybook 10 component catalog for dashboard and employee form components.
 - Docker Compose dev containers, production Dockerfile, and Helm chart.
 
@@ -39,7 +39,11 @@ npm run db:seed
 npm run dev -- --filter @purple-cross/web
 ```
 
-Open `http://localhost:3000/employees`.
+Open `http://localhost:3000/employees`. Protected pages redirect to `/login`; the demo login accepts the prefilled credentials.
+
+## Demo Login
+
+The app includes a lightweight demo login for assessment review. It stores a local demo session cookie, redirects protected pages to `/login`, and exposes a logout button in the dashboard navbar. This is intentionally not a production authentication implementation.
 
 ## Docker Dev
 
