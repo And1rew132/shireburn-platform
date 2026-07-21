@@ -2,7 +2,7 @@
 
 ## Docker Compose
 
-`deploy/docker/docker-compose.yml` runs local PostgreSQL and bind-mounted dev containers for the Nuxt app and Storybook. The app profile exposes Nuxt on `WEB_PORT` with container port `3000`; Storybook exposes `STORYBOOK_PORT` with container port `6006`.
+[`deploy/docker/docker-compose.yml`](../deploy/docker/docker-compose.yml) runs local PostgreSQL and bind-mounted dev containers for the Nuxt app and Storybook. The app profile exposes Nuxt on `WEB_PORT` with container port `3000`; Storybook exposes `STORYBOOK_PORT` with container port `6006`.
 
 ```bash
 docker compose -f deploy/docker/docker-compose.yml up -d postgres
@@ -26,15 +26,9 @@ For Traefik, create or reuse the external proxy network first:
 docker network create traefik
 ```
 
-Then override host settings from the shell or an uncommitted `.env` file:
+Then copy [`.env.example`](../.env.example) to `.env` and adjust the Traefik host, entrypoint, TLS, and port values for the local machine:
 
 ```bash
-TRAEFIK_HOST=shireburn.localhost \
-STORYBOOK_TRAEFIK_HOST=shireburn-storybook.localhost \
-TRAEFIK_ENTRYPOINTS=websecure \
-TRAEFIK_TLS=true \
-WEB_PORT=3012 \
-STORYBOOK_PORT=6016 \
 docker compose -f deploy/docker/docker-compose.yml --profile app --profile storybook up -d --build
 ```
 
@@ -42,13 +36,13 @@ Do not commit personal/internal hostnames or secrets. The compose labels route t
 
 ## Production Image
 
-`deploy/docker/Dockerfile` builds one Nuxt/Nitro runtime image for `@shireburn-platform/employee-management`. It installs workspace dependencies, generates Prisma client code, builds the Nuxt app, and runs `.output/server/index.mjs`.
+[`deploy/docker/Dockerfile`](../deploy/docker/Dockerfile) builds one Nuxt/Nitro runtime image for `@shireburn-platform/employee-management`. It installs workspace dependencies, generates Prisma client code, builds the Nuxt app, and runs `.output/server/index.mjs`.
 
-`.github/workflows/container.yml` runs on `main`, installs dependencies, generates Prisma client code, runs unit tests, builds the app, and publishes `ghcr.io/and1rew132/shireburn-platform` with `main` and commit-SHA tags. It does not edit chart values; live image pins belong to the chart consumer in CRC GitOps.
+[`container.yml`](../.github/workflows/container.yml) runs on `main`, installs dependencies, generates Prisma client code, runs unit tests, builds the app, and publishes `ghcr.io/and1rew132/shireburn-platform` with `main` and commit-SHA tags. It does not edit chart values; live image pins belong to the chart consumer in CRC GitOps.
 
 ## Kubernetes
 
-`deploy/chart` contains a reusable Helm chart with:
+[`deploy/chart`](../deploy/chart) contains a reusable Helm chart with:
 
 - Deployment and Service for the Nuxt app.
 - Migration Job for Prisma migrations.

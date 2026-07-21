@@ -23,6 +23,13 @@ This is a standalone interview assessment repo for the Shireburn Platform employ
 - `deploy/chart/` contains the Kubernetes Helm chart. Production expects an externally managed database secret via `database.existingSecret`; chart-managed Postgres is for temporary review only.
 - `docs/` contains reviewer-facing architecture, testing, and deployment notes.
 
+## Documentation Audience
+
+- Keep `README.md` high-level and human-targeted for interview reviewers: what the project is, what it demonstrates, how to run it, and where to read more.
+- Keep technical depth in `docs/`, with links to the actual folders/files being described and to related doc headings where useful.
+- Keep this `AGENTS.md` agentic: repository constraints, implementation boundaries, commands, data rules, and operational guardrails for future coding agents.
+- When adding a feature, update the README only if the reviewer-facing story changes; otherwise update the relevant file under `docs/`.
+
 ## Data Notes
 
 - Employment status is derived from `dateOfEmployment` and `terminationDate` at read time; do not add it back as a persisted database column.

@@ -2,13 +2,13 @@
 
 ## Unit Tests
 
-Shared helpers are covered in `packages/shared/src/*.test.ts`:
+Shared helpers are covered in [`packages/shared/src/*.test.ts`](../packages/shared/src):
 
 - employment status derivation from date fields
 
-Database import parsing is covered in `packages/db/src/importEmployees.test.ts`.
+Database import parsing is covered in [`packages/db/src/importEmployees.test.ts`](../packages/db/src/importEmployees.test.ts).
 
-Nuxt component tests live beside the components in `apps/employee-management/app/components/__tests__/` and cover the status badge, metric card, and employee form validation path.
+Nuxt component tests live beside the components in [`apps/employee-management/app/components/__tests__`](../apps/employee-management/app/components/__tests__) and cover the status badge, metric card, and employee form validation path.
 
 Run:
 
@@ -18,7 +18,7 @@ npm test
 
 ## E2E Tests
 
-Playwright tests live in `e2e/` and cover the dashboard smoke path: login, loading the employee table, checking responsive dashboard chrome, searching, opening the create form from the floating action dial, and logout.
+Playwright tests live in [`e2e`](../e2e) and cover the dashboard smoke path: login, loading the employee table, checking responsive dashboard chrome, searching, opening the create form from the floating action dial, and logout.
 
 Run with a seeded database and the default dev server:
 
@@ -42,7 +42,7 @@ npm run coverage
 
 ## Storybook
 
-Storybook stories live beside the Nuxt components in `apps/employee-management/app/components/*.stories.ts`. Build Storybook before handoff so the component catalog is verified.
+Storybook stories live beside the Nuxt components in [`apps/employee-management/app/components/*.stories.ts`](../apps/employee-management/app/components). Build Storybook before handoff so the component catalog is verified.
 
 ```bash
 npm run storybook
